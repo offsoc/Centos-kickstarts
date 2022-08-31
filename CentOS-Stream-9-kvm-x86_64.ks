@@ -28,6 +28,8 @@ clearpart --all --initlabel
 # autopart --type=plain --nohome # --nohome doesn't work because of rhbz#1509350
 # autopart is problematic in that it creates /boot and swap partitions rhbz#1542510 rhbz#1673094
 reqpart
+part biosboot  --size=1   --fstype=biosboot
+part /boot/efi --size=100 --fstype=efi
 part / --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --ondisk=vda --size=8000
 reboot
 
@@ -39,6 +41,9 @@ kernel
 yum
 nfs-utils
 dnf-utils
+grub2-pc
+grub2-efi-x64
+shim
 hostname
 
 # pull firmware packages out
@@ -142,6 +147,23 @@ redhat-release-eula
 # workaround anaconda requirements
 passwd -d root
 passwd -l root
+
+# setup bios boot
+grub2-install --target=i386-pc /dev/vda
+rm /boot/grub2/grubenv
+cp /boot/efi/EFI/centos/grubenv /boot/grub2/
+rm /boot/efi/EFI/centos/grubenv
+/usr/sbin/grub2-mkconfig -o /etc/grub2.cfg
+
+# setup uefi boot
+fs_uuid="$(grub2-probe --target=fs_uuid /etc/grub2.cfg)"
+cat << EOF > /etc/grub2-efi.cfg
+search --no-floppy --fs-uuid --set=dev $fs_uuid
+set prefix=(\$dev)/boot/grub2
+export \$prefix
+configfile \$prefix/grub.cfg
+EOF
+/usr/sbin/parted -s /dev/vda disk_set pmbr_boot off
 
 # setup systemd to boot to the right runlevel
 echo -n "Setting default runlevel to multiuser text mode"
