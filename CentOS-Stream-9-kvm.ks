@@ -37,6 +37,7 @@ reboot
 # Packages
 %packages
 @core
+@anaconda-tools
 dnf
 kernel
 yum
@@ -69,6 +70,8 @@ hostname
 -libertas-sd8686-firmware
 -libertas-sd8787-firmware
 -libertas-usb8388-firmware
+
+
 
 # cloud-init does magical things with EC2 metadata, including provisioning
 # a user account with ssh keys.
@@ -141,6 +144,12 @@ redhat-release-eula
 # Add custom post scripts after the base post.
 #
 %post --erroronfail
+
+if [ "$(arch)" = "x86_64" ]; then
+grub2-install --target=i386-pc /dev/vda
+fi
+
+parted /dev/vda disk_set pmbr_boot off
 
 # workaround anaconda requirements
 passwd -d root
