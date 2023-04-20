@@ -37,7 +37,7 @@ reboot
 # Packages
 %packages
 @core
-@anaconda-tools
+@cloud-bootloader-tools
 dnf
 kernel
 yum
