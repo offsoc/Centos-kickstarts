@@ -6,7 +6,7 @@ keyboard us
 timezone --utc UTC
 #RHBZ 1732491 Bump nvme_core io.timeout to avoid AWS nitro instance freeze
 bootloader --timeout=1 --location=mbr --append="console=ttyS0,115200n8 console=tty0 net.ifnames=0 rd.blacklist=nouveau nvme_core.io_timeout=4294967295"
-auth --enableshadow --passalgo=sha512
+#auth --enableshadow --passalgo=sha512
 #authselect select sssd
 selinux --enforcing
 firewall --enabled --service=ssh
