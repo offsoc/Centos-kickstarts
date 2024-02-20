@@ -20,7 +20,7 @@ rootpw --iscrypted nope
 %end
 
 part biosboot --fstype=biosboot --size=1 --ondisk vda
-part / --size 6144 --fstype ext4 --mkfsoptions "-m bigtime=0,inobtcount=0" --ondisk vda
+part / --size 6144 --fstype xfs --mkfsoptions "-m bigtime=0,inobtcount=0" --ondisk vda
 reboot
 
 
@@ -93,7 +93,8 @@ NetworkManager
 -iprutils
 
 # enable rootfs resize on boot
-cloud-utils-growpart
+#not in c10s release yet
+#cloud-utils-growpart
 gdisk
 
 %end
