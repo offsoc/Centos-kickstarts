@@ -85,8 +85,7 @@ python3-jsonschema
 
 #heat-cfntools  # Not available in CentOS-Stream-10 (yet?)
 
-#not in c10s release yet
-#cloud-utils-growpart
+cloud-utils-growpart
 # We need this image to be portable; also, rescue mode isn't useful here.
 dracut-config-generic
 

@@ -91,8 +91,7 @@ NetworkManager
 -iprutils
 
 # enable rootfs resize on boot
-#not in c10s release yet
-#cloud-utils-growpart
+cloud-utils-growpart
 gdisk
 
 %end
