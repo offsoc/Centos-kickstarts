@@ -12,15 +12,15 @@ libusbx
 
 %post --erroronfail --log=/root/anaconda-post.log
 # remove some random help txt files
-rm -fv usr/share/gnupg/help*.txt
+rm -fv /usr/share/gnupg/help*.txt
 
 # Pruning random things
-rm usr/lib/rpm/rpm.daily
-rm -rfv usr/lib64/nss/unsupported-tools/  # unsupported
+rm -fv /usr/lib/rpm/rpm.daily
+rm -rfv /usr/lib64/nss/unsupported-tools/  # unsupported
 
-# Statically linked crap
-rm -fv usr/sbin/{glibc_post_upgrade.x86_64,sln}
-ln usr/bin/ln usr/sbin/sln
+# Unneeded, statically linked binaries
+rm -fv /usr/sbin/{glibc_post_upgrade.x86_64,sln}
+ln -v /usr/bin/ln /usr/sbin/sln
 
 # Remove some dnf info
 rm -rfv /var/lib/dnf
@@ -38,7 +38,7 @@ rm -rfv /usr/lib/systemd
 
 # if you want to change the timezone, bind-mount it from the host or reinstall tzdata
 rm -fv /etc/localtime
-mv /usr/share/zoneinfo/UTC /etc/localtime
+mv -v /usr/share/zoneinfo/UTC /etc/localtime
 rm -rfv  /usr/share/zoneinfo
 
 # Final pruning
@@ -63,12 +63,11 @@ umount /mnt/sysimage/run
 chroot /mnt/sysimage install -d /run/lock -m 0755 -o root -g root
 
 
-## This is failling on composes
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=1051816
 # NOTE: run this in nochroot because "find" does not exist in chroot
-#KEEPLANG=en_US
-#for dir in locale i18n; do
-#    find /mnt/sysimage/usr/share/${dir} -mindepth  1 -maxdepth 1 -type d -not \( -name "${KEEPLANG}" -o -name POSIX \) -exec rm -rfv {} +
-#done
+KEEPLANG=en_US
+for dir in locale i18n; do
+    find /mnt/sysimage/usr/share/${dir} -mindepth  1 -maxdepth 1 -type d -not \( -name "${KEEPLANG}" -o -name POSIX \) -exec rm -rfv {} +
+done
 
 %end
