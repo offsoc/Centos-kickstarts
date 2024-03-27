@@ -33,11 +33,10 @@ rm -rfv /usr/share/icons/*
 #some random not-that-useful binaries
 rm -fv /usr/bin/pinky
 
-## This is failling because systemd is installed
-## we lose presets by removing /usr/lib/systemd, but systemd should not
-## be installed anyway.  Check to see if it is and fail
-#if rpm -q systemd; then echo "systemd installed, exiting" && exit 5; fi
-#rm -rfv /usr/lib/systemd
+# we lose presets by removing /usr/lib/systemd, but systemd should not
+# be installed anyway.  Check to see if it is and fail
+if rpm -q systemd; then echo "systemd installed, exiting" && exit 5; fi
+rm -rfv /usr/lib/systemd
 
 # if you want to change the timezone, bind-mount it from the host or reinstall tzdata
 rm -fv /etc/localtime
