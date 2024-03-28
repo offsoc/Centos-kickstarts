@@ -28,7 +28,6 @@ clearpart --all --initlabel
 # autopart --type=plain --nohome # --nohome doesn't work because of rhbz#1509350
 # autopart is problematic in that it creates /boot and swap partitions rhbz#1542510 rhbz#1673094
 reqpart
-part biosboot  --size=1   --fstype=biosboot
 part /boot/efi --size=100 --fstype=efi
 part / --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --ondisk=vda --size=8000
 reboot
