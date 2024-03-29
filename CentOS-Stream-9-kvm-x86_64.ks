@@ -147,13 +147,6 @@ redhat-release-eula
 passwd -d root
 passwd -l root
 
-# setup bios boot
-grub2-install --target=i386-pc /dev/vda
-rm /boot/grub2/grubenv
-cp /boot/efi/EFI/centos/grubenv /boot/grub2/
-rm /boot/efi/EFI/centos/grubenv
-/usr/sbin/grub2-mkconfig -o /etc/grub2.cfg
-
 # setup uefi boot
 fs_uuid="$(grub2-probe --target=fs_uuid /etc/grub2.cfg)"
 cat << EOF > /etc/grub2-efi.cfg
