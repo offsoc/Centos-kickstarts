@@ -28,8 +28,32 @@ clearpart --all --initlabel
 # autopart --type=plain --nohome # --nohome doesn't work because of rhbz#1509350
 # autopart is problematic in that it creates /boot and swap partitions rhbz#1542510 rhbz#1673094
 reqpart
-part / --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --ondisk=vda --size=8000
+part biosboot --fstype="biosboot" --onpart=vda1
+part /boot/efi --fstype="efi" --onpart=vda2
+part /boot --fstype="xfs" --label=boot --onpart=vda3
+part / --fstype="xfs" --label=root --mkfsoptions "-m bigtime=0,inobtcount=0" --onpart=vda4 --size=8000 --grow
 reboot
+
+%pre
+# Clear the Master Boot Record
+dd if=/dev/zero of=/dev/vda bs=512 count=1
+# Create a new GPT partition table
+parted /dev/vda mklabel gpt
+# Create biosboot partition
+parted /dev/vda mkpart primary 1MiB 2MiB
+# Create EFI partition
+parted /dev/vda mkpart primary fat32 2MiB 202MiB
+# keep efi partition with the boot and esp flag
+parted /dev/vda set 2 boot on
+parted /dev/vda set 2 esp on
+# Create /boot partition
+parted /dev/vda mkpart primary xfs 202MiB 1226MiB
+# ensure "linux extended boot" is set on /boot
+parted /dev/vda set 3 bls_boot on
+# Create root partition
+parted /dev/vda mkpart primary xfs 1226MiB 10240MiB
+
+%end
 
 # Packages
 %packages
@@ -40,6 +64,7 @@ yum
 nfs-utils
 dnf-utils
 grub2-pc
+grub2-pc-modules
 grub2-efi-x64
 shim
 hostname
@@ -145,6 +170,26 @@ redhat-release-eula
 # workaround anaconda requirements
 passwd -d root
 passwd -l root
+
+# Setup grub
+grub2-install --target=i386-pc /dev/vda
+
+# Attempt to setup BIOS booting
+rm /boot/grub2/grubenv
+cp /boot/efi/EFI/centos/grubenv /boot/grub2/
+rm /boot/efi/EFI/centos/grubenv
+/usr/sbin/grub2-mkconfig -o /etc/grub2.cfg
+
+# Attempt to setup UEFI booting
+fs_uuid="$(grub2-probe --target=fs_uuid /etc/grub2.cfg)"
+cat << EOF > /etc/grub2-efi.cfg
+search --no-floppy --fs-uuid --set=dev $fs_uuid
+set prefix=(\$dev)/boot/grub2
+export \$prefix
+configfile \$prefix/grub.cfg
+EOF
+
+parted /dev/vda disk_set pmbr_boot off
 
 # setup systemd to boot to the right runlevel
 echo -n "Setting default runlevel to multiuser text mode"
