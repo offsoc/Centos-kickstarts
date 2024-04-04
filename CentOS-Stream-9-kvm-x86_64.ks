@@ -51,7 +51,7 @@ parted /dev/vda mkpart primary xfs 202MiB 1226MiB
 # ensure "linux extended boot" is set on /boot
 parted /dev/vda set 3 bls_boot on
 # Create root partition
-parted /dev/vda mkpart primary xfs 1226MiB 10240MiB
+parted /dev/vda mkpart primary xfs 1226MiB 11GB
 
 %end
 
