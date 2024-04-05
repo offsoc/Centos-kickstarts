@@ -23,11 +23,6 @@ rootpw --iscrypted nope
 # This information is used by appliance-tools but
 # not by the livecd tools.
 #
-zerombr
-clearpart --all --initlabel
-# autopart --type=plain --nohome # --nohome doesn't work because of rhbz#1509350
-# autopart is problematic in that it creates /boot and swap partitions rhbz#1542510 rhbz#1673094
-reqpart
 part biosboot --fstype="biosboot" --onpart=vda1
 part /boot/efi --fstype="efi" --onpart=vda2
 part /boot --fstype="xfs" --label=boot --onpart=vda3
