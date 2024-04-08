@@ -43,8 +43,6 @@ parted /dev/vda set 2 boot on
 parted /dev/vda set 2 esp on
 # Create /boot partition
 parted /dev/vda mkpart primary xfs 202MiB 1226MiB
-# ensure "linux extended boot" is set on /boot
-parted /dev/vda set 3 bls_boot on
 # Create root partition
 parted /dev/vda mkpart primary xfs 1226MiB 11GB
 
@@ -166,25 +164,9 @@ redhat-release-eula
 passwd -d root
 passwd -l root
 
-# Setup grub
-grub2-install --target=i386-pc /dev/vda
-
-# Attempt to setup BIOS booting
-rm /boot/grub2/grubenv
-cp /boot/efi/EFI/centos/grubenv /boot/grub2/
-rm /boot/efi/EFI/centos/grubenv
-/usr/sbin/grub2-mkconfig -o /etc/grub2.cfg
-
-# Attempt to setup UEFI booting
-fs_uuid="$(grub2-probe --target=fs_uuid /etc/grub2.cfg)"
-cat << EOF > /etc/grub2-efi.cfg
-search --no-floppy --fs-uuid --set=dev $fs_uuid
-set prefix=(\$dev)/boot/grub2
-export \$prefix
-configfile \$prefix/grub.cfg
-EOF
-
-parted /dev/vda disk_set pmbr_boot off
+# Run this here because the builder parted is too old
+# ensure "linux extended boot" is set on /boot
+parted /dev/vda set 3 bls_boot on
 
 # setup systemd to boot to the right runlevel
 echo -n "Setting default runlevel to multiuser text mode"
