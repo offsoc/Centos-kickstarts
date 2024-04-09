@@ -43,8 +43,6 @@ parted /dev/vda set 2 boot on
 parted /dev/vda set 2 esp on
 # Create /boot partition
 parted /dev/vda mkpart primary xfs 202MiB 1226MiB
-# ensure "linux extended boot" is set on /boot
-parted /dev/vda set 3 bls_boot on
 # Create root partition
 parted /dev/vda mkpart primary xfs 1226MiB 11GB
 
@@ -161,8 +159,9 @@ redhat-release-eula
 passwd -d root
 passwd -l root
 
-grub2-install --target=i386-pc /dev/vda
-parted /dev/vda disk_set pmbr_boot off
+# Run this here because the builder parted is too old
+# ensure "linux extended boot" is set on /boot
+parted /dev/vda set 3 bls_boot on
 
 # setup systemd to boot to the right runlevel
 echo -n "Setting default runlevel to multiuser text mode"
