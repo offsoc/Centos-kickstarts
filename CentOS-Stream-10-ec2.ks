@@ -4,7 +4,6 @@ text
 lang en_US.UTF-8
 keyboard us
 timezone --utc UTC
-#RHBZ 1732491 Bump nvme_core io.timeout to avoid AWS nitro instance freeze
 bootloader --timeout=1 --location=mbr --append="console=ttyS0,115200n8 console=tty0 net.ifnames=0 rd.blacklist=nouveau nvme_core.io_timeout=4294967295"
 #auth --enableshadow --passalgo=sha512
 #authselect select sssd
@@ -19,8 +18,9 @@ rootpw --iscrypted nope
 /usr/sbin/parted -s /dev/vda mklabel gpt
 %end
 
-part biosboot --fstype=biosboot --size=1 --ondisk vda
-part / --size 6144 --fstype xfs --mkfsoptions "-m bigtime=0,inobtcount=0" --ondisk vda
+part /boot/efi --fstype="efi" --size=200 --ondisk vda
+part /boot --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --size=512 --ondisk vda
+part / --size 6144 --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --ondisk vda
 reboot
 
 
@@ -30,8 +30,6 @@ reboot
 kernel
 yum-utils
 rng-tools
-redhat-release
-redhat-release-eula
 
 # pull firmware packages out
 -aic94xx-firmware
@@ -106,6 +104,30 @@ gdisk
 # workaround anaconda requirements
 passwd -d root
 passwd -l root
+
+# Create grub.conf for EC2. This used to be done by appliance creator but
+# anaconda doesn't do it. And, in case appliance-creator is used, we're
+# overriding it here so that both cases get the exact same file.
+# Note that the console line is different -- that's because EC2 provides
+# different virtual hardware, and this is a convenient way to act differently
+echo -n "Creating grub.conf for pvgrub"
+rootuuid=$( awk '$2=="/" { print $1 };'  /etc/fstab )
+mkdir /boot/grub
+echo -e 'default=0\ntimeout=0\n\n' > /boot/grub/grub.conf
+for kv in $( ls -1v /boot/vmlinuz* |grep -v rescue |sed s/.*vmlinuz-//  ); do
+  echo "title CentOS Stream 10 ($kv)" >> /boot/grub/grub.conf
+  echo -e "\troot (hd0)" >> /boot/grub/grub.conf
+  echo -e "\tkernel /boot/vmlinuz-$kv ro root=$rootuuid console=hvc0 LANG=en_US.UTF-8" >> /boot/grub/grub.conf
+  echo -e "\tinitrd /boot/initramfs-$kv.img" >> /boot/grub/grub.conf
+  echo
+done
+
+# ImageFactory EC2 plugin stuff starts here -- remove once in Brew
+#link grub.conf to menu.lst for ec2 to work
+echo -n "Linking menu.lst to old-style grub.conf for pv-grub"
+ln -sf grub.conf /boot/grub/menu.lst
+ln -sf /boot/grub/grub.conf /etc/grub.conf
+
 
 mkdir /data
 # ImageFactory EC2 plugin stuff ends here -- remove once in Brew
