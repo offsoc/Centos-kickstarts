@@ -77,7 +77,6 @@ firewalld
 # cherry-pick a few things from @base
 tar
 rsync
-dhcp-client
 NetworkManager
 
 # certs for RHUI

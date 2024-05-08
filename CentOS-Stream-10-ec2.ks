@@ -18,6 +18,7 @@ rootpw --iscrypted nope
 /usr/sbin/parted -s /dev/vda mklabel gpt
 %end
 
+part biosboot --fstype=biosboot --size=1 --ondisk vda
 part /boot/efi --fstype="efi" --size=200 --ondisk vda
 part /boot --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --size=512 --ondisk vda
 part / --size 6144 --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --ondisk vda
@@ -77,7 +78,6 @@ firewalld
 # cherry-pick a few things from @base
 tar
 rsync
-dhcp-client
 NetworkManager
 
 # certs for RHUI
