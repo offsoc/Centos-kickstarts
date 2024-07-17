@@ -3,7 +3,7 @@
 
 %include CentOS-Stream-10-container-common.ks
 
-%packages --excludedocs --instLangs=en --nocore --excludeWeakdeps
+%packages --excludedocs --nocore
 # Install yum explicitly instead of dnf to make sure we get the 'yum' command
 yum
 #subscription-manager

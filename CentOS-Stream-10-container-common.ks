@@ -18,7 +18,7 @@
 
 text # don't use cmdline -- https://github.com/rhinstaller/anaconda/issues/931
 bootloader --disabled
-timezone --utc --nontp Etc/UTC
+timezone --utc
 rootpw --lock --iscrypted locked
 keyboard us
 network --bootproto=dhcp --device=link --activate --onboot=on
@@ -32,7 +32,7 @@ autopart --noboot --nohome --noswap --nolvm --fstype=ext4
 %addon com_redhat_kdump --disable
 %end
 
-%packages --excludedocs --instLangs=en --nocore
+%packages --excludedocs --nocore
 redhat-release
 bash
 rootfiles

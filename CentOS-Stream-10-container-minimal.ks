@@ -4,7 +4,7 @@
 
 %include CentOS-Stream-10-container-common.ks
 
-%packages --excludedocs --instLangs=en --nocore --excludeWeakdeps
+%packages --excludedocs --nocore
 microdnf
 libusbx
 -crypto-policies-scripts
