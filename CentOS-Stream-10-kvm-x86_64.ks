@@ -26,7 +26,6 @@ rootpw --iscrypted nope
 #
 part biosboot --fstype="biosboot" --onpart=vda1
 part /boot/efi --fstype="efi" --onpart=vda2
-part /boot --fstype="xfs" --label=boot --onpart=vda3
 part / --fstype="xfs" --label=root --mkfsoptions "-m bigtime=0,inobtcount=0" --onpart=vda4 --size=8000 --grow
 reboot
 
@@ -42,10 +41,8 @@ parted /dev/vda mkpart primary fat32 2MiB 202MiB
 # keep efi partition with the boot and esp flag
 parted /dev/vda set 2 boot on
 parted /dev/vda set 2 esp on
-# Create /boot partition
-parted /dev/vda mkpart primary xfs 202MiB 1226MiB
 # Create root partition
-parted /dev/vda mkpart primary xfs 1226MiB 11GB
+parted /dev/vda mkpart primary xfs 202MiB 11GB
 
 %end
 
@@ -109,7 +106,7 @@ dracut-config-generic
 # Don't include dracut-config-rescue. It will have dracut generate a
 # "rescue" entry in the grub menu, but that also means there is a
 # rescue kernel and initramfs that get created, which (currently) add
-# about another 40MiB to the /boot/ partition. Also the "rescue" mode
+# about another 40MiB to the /boot/ directory. Also the "rescue" mode
 # is generally not useful in the cloud.
 -dracut-config-rescue
 
@@ -161,7 +158,7 @@ passwd -d root
 passwd -l root
 
 # Run this here because the builder parted is too old
-# ensure "linux extended boot" is set on /boot
+# ensure "linux extended boot" is set on /
 parted /dev/vda set 3 bls_boot on
 
 # setup systemd to boot to the right runlevel
