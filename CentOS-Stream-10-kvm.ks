@@ -9,7 +9,7 @@ lang en_US.UTF-8
 keyboard us
 timezone --utc America/New_York
 # add console and reorder in %post
-bootloader --timeout=1 --location=mbr --append="console=ttyS0,115200n8 no_timer_check crashkernel=auto net.ifnames=0"
+bootloader --timeout=1 --location=mbr --append="console=ttyS0,115200n8 no_timer_check crashkernel=auto"
 #auth --enableshadow --passalgo=sha512
 #authselect select sssd
 selinux --enforcing
