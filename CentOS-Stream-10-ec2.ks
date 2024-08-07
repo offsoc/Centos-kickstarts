@@ -1,5 +1,4 @@
 # Kickstart file to build CentOS-Stream-10 Amazon EC2 image
-#version=F40
 
 text
 lang en_US.UTF-8

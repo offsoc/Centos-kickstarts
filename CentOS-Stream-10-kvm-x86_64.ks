@@ -2,7 +2,6 @@
 # This image is used to test CentOS-Stream-10 content for
 # the cloud instances. This image provides minimally configured
 # system image.
-#version=F40
 
 text
 lang en_US.UTF-8
