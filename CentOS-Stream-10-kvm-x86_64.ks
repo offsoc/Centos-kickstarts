@@ -26,7 +26,7 @@ rootpw --iscrypted nope
 #
 part biosboot --fstype="biosboot" --onpart=vda1
 part /boot/efi --fstype="efi" --onpart=vda2
-part / --fstype="xfs" --label=root --mkfsoptions "-m bigtime=0,inobtcount=0" --onpart=vda4 --size=8000 --grow
+part / --fstype="xfs" --label=root --mkfsoptions "-m bigtime=0,inobtcount=0" --onpart=vda3 --size=8000 --grow
 reboot
 
 %pre
