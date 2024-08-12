@@ -16,7 +16,7 @@
 #   imagefactory --debug target_image --template /path/to/fedora-atomic-rawhide.tdl --parameter offline_icicle true --file-parameter install_script $(pwd)/CentOS-Stream-10-container-base-test.ks docker
 #
 
-text # don't use cmdline -- https://github.com/rhinstaller/anaconda/issues/931
+text
 bootloader --disabled
 timezone --utc
 rootpw --lock --iscrypted locked
@@ -48,7 +48,7 @@ crypto-policies-scripts
 # s390utils-base needs fuse-libs. Comment it for now.
 #-fuse-libs
 -gnupg2-smime
--libss # used by e2fsprogs
+-libss
 -pinentry
 # gdk-pixbuf2-2.42.10-8.el10.s390x requires shared-mime-info
 #-shared-mime-info
