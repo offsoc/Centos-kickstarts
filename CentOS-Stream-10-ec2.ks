@@ -91,7 +91,6 @@ NetworkManager
 
 # enable rootfs resize on boot
 cloud-utils-growpart
-gdisk
 
 %end
 
@@ -233,7 +232,7 @@ blacklist nouveau
 EOL
 
 # enable resizing on copied AMIs
-echo 'install_items+=" sgdisk "' > /etc/dracut.conf.d/sgdisk.conf
+echo 'install_items+=" sfdisk "' > /etc/dracut.conf.d/sfdisk.conf
 
 echo 'add_drivers+=" xen-netfront xen-blkfront "' > /etc/dracut.conf.d/xen.conf
 # Rerun dracut for the installed kernel (not the running kernel):
