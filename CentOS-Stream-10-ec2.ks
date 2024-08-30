@@ -231,9 +231,6 @@ cat > /etc/modprobe.d/blacklist-nouveau.conf << EOL
 blacklist nouveau
 EOL
 
-# enable resizing on copied AMIs
-echo 'install_items+=" sfdisk "' > /etc/dracut.conf.d/sfdisk.conf
-
 echo 'add_drivers+=" xen-netfront xen-blkfront "' > /etc/dracut.conf.d/xen.conf
 # Rerun dracut for the installed kernel (not the running kernel):
 KERNEL_VERSION=$(rpm -q kernel --qf '%{V}-%{R}.%{arch}\n')

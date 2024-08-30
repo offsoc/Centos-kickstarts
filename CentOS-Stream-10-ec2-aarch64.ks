@@ -230,9 +230,6 @@ cat > /etc/modprobe.d/blacklist-nouveau.conf << EOL
 blacklist nouveau
 EOL
 
-# enable resizing on copied AMIs
-echo 'install_items+=" sfdisk "' > /etc/dracut.conf.d/sfdisk.conf
-
 # Rerun dracut for the installed kernel (not the running kernel):
 KERNEL_VERSION=$(rpm -q kernel --qf '%{V}-%{R}.%{arch}\n')
 dracut -f /boot/initramfs-$KERNEL_VERSION.img $KERNEL_VERSION
