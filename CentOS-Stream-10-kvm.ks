@@ -74,7 +74,7 @@ cloud-init
 python3-jsonschema
 
 # allows the host machine to issue commands to the guest operating system
-# qemu-guest-agent
+qemu-guest-agent
 
 # need this for growpart, because parted doesn't yet support resizepart
 # https://bugzilla.redhat.com/show_bug.cgi?id=966993
