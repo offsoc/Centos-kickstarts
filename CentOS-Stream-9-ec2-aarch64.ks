@@ -19,7 +19,7 @@ rootpw --iscrypted nope
 %end
 
 part /boot/efi --fstype="efi" --size=200 --ondisk vda
-part /boot --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --size=512 --ondisk vda
+part /boot --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --size=1024 --ondisk vda
 part / --size 6144 --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --ondisk vda
 reboot
 
