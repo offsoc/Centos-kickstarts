@@ -40,6 +40,7 @@ coreutils-single
 curl-minimal
 libcurl-minimal
 glibc-minimal-langpack
+tzdata
 crypto-policies-scripts
 python3-dnf-plugins-core
 -kernel
