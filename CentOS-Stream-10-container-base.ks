@@ -13,6 +13,7 @@ findutils
 tar
 gzip
 crypto-policies-scripts
+python3-dnf-plugins-core
 %end
 
 %post --erroronfail --log=/root/anaconda-post.log
