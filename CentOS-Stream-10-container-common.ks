@@ -42,7 +42,6 @@ libcurl-minimal
 glibc-minimal-langpack
 tzdata
 crypto-policies-scripts
-python3-dnf-plugins-core
 -kernel
 -dosfstools
 -e2fsprogs
