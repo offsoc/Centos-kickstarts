@@ -10,7 +10,6 @@ libusbx
 -crypto-policies-scripts
 -chrony
 -systemd
--tzdata
 %end
 
 %post --erroronfail --log=/root/anaconda-post.log
