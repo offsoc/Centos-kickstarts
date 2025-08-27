@@ -18,7 +18,7 @@
 
 text
 bootloader --disabled
-timezone --utc etc/utc
+timezone --utc UTC
 rootpw --lock --iscrypted locked
 keyboard us
 network --bootproto=dhcp --device=link --activate --onboot=on
