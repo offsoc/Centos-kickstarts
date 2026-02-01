@@ -24,16 +24,20 @@ rootpw --iscrypted nope
 # not by the livecd tools.
 #
 zerombr
-clearpart --all --initlabel
+clearpart --all --initlabel --disklabel=gpt
 # autopart --type=plain --nohome # --nohome doesn't work because of rhbz#1509350
 # autopart is problematic in that it creates /boot and swap partitions rhbz#1542510 rhbz#1673094
-reqpart
+reqpart --add-boot
+part biosboot --size=1 --fstype=biosboot
+part /boot/efi --size=100 --type=efi
+part /boot --size=500 --fstype=xfs --label=boot
 part / --fstype="xfs" --mkfsoptions "-m bigtime=0,inobtcount=0" --ondisk=vda --size=8000
 reboot
 
 # Packages
 %packages
 @core
+@cloud-bootloader-tools
 dnf
 kernel
 yum
@@ -66,6 +70,8 @@ hostname
 -libertas-sd8686-firmware
 -libertas-sd8787-firmware
 -libertas-usb8388-firmware
+
+
 
 # cloud-init does magical things with EC2 metadata, including provisioning
 # a user account with ssh keys.
@@ -138,6 +144,12 @@ redhat-release-eula
 # Add custom post scripts after the base post.
 #
 %post --erroronfail
+
+if [ "$(arch)" = "x86_64" ]; then
+grub2-install --target=i386-pc /dev/vda
+fi
+
+parted /dev/vda disk_set pmbr_boot off
 
 # workaround anaconda requirements
 passwd -d root
